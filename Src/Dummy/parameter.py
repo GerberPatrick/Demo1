@@ -25,5 +25,5 @@ def update_parameter(parameter: Parameter) -> Parameter:
 def replace_parameter(parameter: Parameter) -> Parameter:
     return parameter
 
-def delete_parameter(parameter: Parameter) -> Parameter:
-    return parameter    
+def delete_parameter(parameter: Parameter) -> bool:
+    return None  
