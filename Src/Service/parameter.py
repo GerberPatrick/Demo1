@@ -1,20 +1,20 @@
-from Model.parameter import Parameter
-import Dummy.parameter as data
+from Model.parameter import Parameter #Parameter Modell importieren
+import Dummy.parameter as data #Dummy Daten importieren
 
-def get_parameters() -> list[Parameter]:
+def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
     return data.get_parameters()
 
-def get_parameter(name: str) -> Parameter | None:
+def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben -> gemäss dem Namen
     return data.get_parameter(name)
 
-def create_parameter(parameter: Parameter) -> Parameter:
+def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
     return data.create_parameter(parameter)
 
-def update_parameter(id: int, parameter: Parameter) -> Parameter:
-    return data.update_parameter(id, parameter)
+def update_parameter(parameter: Parameter) -> Parameter: #Einen Eintrag ändern
+    return data.update_parameter(parameter)
 
-def replace_parameter(id: int, parameter: Parameter) -> Parameter:
-    return data.replace_parameter(id, parameter)
+def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
+    return data.replace_parameter(parameter)
 
-def delete_parameter(id: int, parameter: Parameter) -> bool:
-    return data.delete_parameter(id)
+def delete_parameter(name: str) -> bool: #Einen Parameter löschen
+    return data.delete_parameter(name)
