@@ -1,4 +1,4 @@
-from Model.parameter import Parameter
+from Model.parameter import Parameter #Parameter Modell importieren
 
 #Dummy Daten
 parameters = \
@@ -8,6 +8,7 @@ parameters = \
     Parameter(id=3, name="CRP", unit="mg/dl", value=0.1),
 ]
 
+#CRUD Funktionen
 def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
     return parameters
 
@@ -26,5 +27,5 @@ def update_parameter(parameter: Parameter) -> Parameter: #Einen Eintrag ändern
 def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
     return parameter
 
-def delete_parameter(name: str) -> bool: #Einen Parameter löschen
+def delete_parameter(name: str) -> None: #Einen Parameter löschen
     return None  

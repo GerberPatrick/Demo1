@@ -16,5 +16,5 @@ def update_parameter(parameter: Parameter) -> Parameter: #Einen Eintrag ändern
 def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
     return data.replace_parameter(parameter)
 
-def delete_parameter(name: str) -> bool: #Einen Parameter löschen
+def delete_parameter(name: str) -> None: #Einen Parameter löschen
     return data.delete_parameter(name)
