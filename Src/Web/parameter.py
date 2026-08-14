@@ -6,11 +6,11 @@ router = APIRouter(prefix = "/parameter") #Router erstellen -> Endpoint /paramet
 
 @router.get("/") #Path Operation -> GET Request
 def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
-    return service.get_parameters() #Funktion-Call aus Dummy.parameter -> ohne Argument
+    return service.get_parameters() #Funktion-Call aus Service.parameter -> ohne Argument
 
 @router.get("/{name}") #Path Operation -> GET Request
 def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben -> gemäss dem Namen
-    return service.get_parameter(name) #Funktion-Call aus Dummy.parameter -> mit Argument
+    return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
 
 @router.post("/") #Path Operation -> POST Request
 def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
@@ -26,4 +26,4 @@ def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Para
 
 @router.delete("/{name}") #Path Operation -> DELETE Request
 def delete_parameter(name: str): #Einen Parameter löschen
-    return service.delete_parameter(name) #Funktion-Call aus Dummy.parameter -> mit Argument
+    return service.delete_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
