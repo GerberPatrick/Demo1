@@ -1,5 +1,5 @@
 from Model.parameter import Parameter #Parameter Modell importieren
-import Dummy.parameter as data #Dummy Daten importieren
+import Data.parameter as data #Datenbank-Layer importieren
 
 #Middle Layer für die CRUD Operationen
 def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
