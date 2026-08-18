@@ -11,11 +11,11 @@ def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben 
 def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
     return data.create_parameter(parameter)
 
-def update_parameter(parameter: Parameter) -> Parameter: #Einen Eintrag ändern
-    return data.update_parameter(parameter)
+def update_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Eintrag ändern
+    return data.update_parameter(name, parameter)
 
-def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
-    return data.replace_parameter(parameter)
+def replace_parameter(name: str, parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
+    return data.replace_parameter(name, parameter)
 
 def delete_parameter(name: str) -> None: #Einen Parameter löschen
     return data.delete_parameter(name)

@@ -3,7 +3,7 @@ from Web import parameter
 
 app = FastAPI() #FastAPI Instanz erstellen
 
-app.include_router(parameter.router) #Router einbinden 
+app.include_router(parameter.router) #Router einbinden -> Router sind im Ordner Web definiert
 
 if __name__ == "__main__": #Main Funktion
     import uvicorn

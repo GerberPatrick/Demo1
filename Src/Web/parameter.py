@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from Model.parameter import Parameter #Parameter Modell importieren
 from Service import parameter as service #Service Layer importieren
-from Error.errors import MissingParameterError, DuplicateParameterError
+from Error.errors import MissingParameterError, DuplicateParameterError #Fehler Klassen importieren
 
-router = APIRouter(prefix = "/parameter") #Router erstellen -> Endpoint /parameter
+router = APIRouter(prefix = "/parameter") #Router erstellen -> Endpoint /parameter bzw. /parameter/
 
 @router.get("") #Path Operation -> GET Request
 @router.get("/") #Path Operation -> GET Request
@@ -14,11 +14,11 @@ def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
 def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben -> gemäss dem Namen
     try:
         return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
-    except MissingParameterError as e:
+    except MissingParameterError as e: 
         raise HTTPException(status_code=404, detail=e.message) #Fehler, falls der Parameter in der Datenbank nicht gefunden wurde
 
-@router.post("", status_code=201) #Path Operation -> POST Request
-@router.post("/", status_code=201) #Path Operation -> POST Request
+@router.post("", status_code=201) #Path Operation -> POST Request / Status Code 201 -> Parameter erstellt
+@router.post("/", status_code=201) #Path Operation -> POST Request / Status Code 201 -> Parameter erstellt
 def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
     try:
         return service.create_parameter(parameter) #Funktion-Call aus Service.parameter -> mit Argument
@@ -41,8 +41,8 @@ def replace_parameter(name: str, parameter: Parameter) -> Parameter: #Einen komp
     except MissingParameterError as e:
         raise HTTPException(status_code=404, detail=e.message) #Fehler, falls der Parameter nicht gefunden wurde
 
-@router.delete("/{name}", status_code=204) #Path Operation -> DELETE Request
-def delete_parameter(name: str): #Einen Parameter löschen
+@router.delete("/{name}", status_code=204)#Path Operation -> DELETE Request / Status Code 204 -> Parameter gelöscht
+def delete_parameter(name: str) -> None: #Einen Parameter löschen
     try:    
         return service.delete_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
     except MissingParameterError as e:
