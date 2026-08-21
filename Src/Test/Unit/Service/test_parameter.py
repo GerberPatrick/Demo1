@@ -1,6 +1,6 @@
 from Model.parameter import Parameter
 from Service import parameter as code
-
+#Test-Funktionen für die CRUD Operationen -> Service-Layer
 sample = Parameter(id=1, name="Glucose", unit="mg/dl", value=10.0)
 
 def test_create_parameter(): 

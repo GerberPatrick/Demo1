@@ -1,6 +1,6 @@
 from Model.parameter import Parameter #Parameter Modell importieren
 
-#Dummy Daten
+#Dummy Daten -> Erste Implementation -> zur Testung des Schichtenmodells: Data-Layer -> Service-Layer -> Web-Layer
 parameters = \
 [
     Parameter(id=1, name="Glucose", unit="mg/dl", value=10.0),
@@ -27,5 +27,5 @@ def update_parameter(parameter: Parameter) -> Parameter: #Einen Eintrag ändern
 def replace_parameter(parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
     return parameter
 
-def delete_parameter(name: str) -> None: #Einen Parameter löschen
-    return None  
+def delete_parameter(name: str) -> bool: #Einen Parameter löschen
+    return True  

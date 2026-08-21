@@ -1,7 +1,7 @@
-class MissingParameterError(Exception):
-    def __init__(self, message: str):
+class MissingParameterError(Exception): #Argument -> Exception-Klasse
+    def __init__(self, message: str): #Konstruktor -> Message als String
         self.message = message
 
-class DuplicateParameterError(Exception):
-    def __init__(self, message: str):
+class DuplicateParameterError(Exception): #Argument -> Exception-Klasse
+    def __init__(self, message: str): #Konstruktor -> Message als String
         self.message = message
