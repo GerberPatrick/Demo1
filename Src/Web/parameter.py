@@ -11,7 +11,7 @@ def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
     return service.get_parameters() #Funktion-Call aus Service.parameter -> ohne Argument
 
 @router.get("/{name}") #Path Operation -> GET Request
-def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben -> gemäss dem Namen
+def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gemäss dem Namen
     try:
         return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
     except MissingParameterError as e: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist

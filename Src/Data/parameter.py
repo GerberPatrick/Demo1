@@ -2,7 +2,7 @@ from Data.init import connection, cursor, IntegrityError #Datenbank-Layer import
 from Error.errors import MissingParameterError, DuplicateParameterError #Fehler-Layer importieren -> zwei Klassen: MissingParameterError und DuplicateParameterError
 from Model.parameter import Parameter #Model-Layer importieren -> Klasse: Parameter
 
-cursor.execute("CREATE TABLE IF NOT EXISTS PARAMETER(id INTEGER PRIMARY KEY, name TEXT, unit TEXT, value REAL)") #Tabelle erstellen, falls nicht vorhanden
+cursor.execute("CREATE TABLE IF NOT EXISTS PARAMETER(id INTEGER PRIMARY KEY, name UNIQUE, unit TEXT, value REAL)") #Tabelle erstellen, falls nicht vorhanden
 
 def row_to_model(row: tuple) -> Parameter: #Zeile in ein Model umwandeln -> Tuple aus id, name, unit und value
     id, name, unit, value = row #Zeile in ein Tuple umwandeln
@@ -11,7 +11,7 @@ def row_to_model(row: tuple) -> Parameter: #Zeile in ein Model umwandeln -> Tupl
 def model_to_dict(parameter: Parameter) -> dict: #Model in ein Dict umwandeln
     return parameter.dict()
 
-def get_parameter(name: str) -> Parameter | None: #Einen Parameter aus der Datenbank auslesen -> gemäss dem Namen
+def get_parameter(name: str) -> Parameter: #Einen Parameter aus der Datenbank auslesen -> gemäss dem Namen
     query = "SELECT * FROM PARAMETER WHERE name=:name" #Query erstellen -> key:value Paar
     params = {"name": name} #Parameter erstellen -> ein key:value Paar
     cursor.execute(query, params) #Query ausführen
@@ -25,11 +25,9 @@ def get_parameters() -> list[Parameter]: #Alle Parameter aus der Datenbank ausle
     query = "SELECT * FROM PARAMETER" #Query erstellen
     cursor.execute(query) #Query ausführen
     rows = list(cursor.fetchall()) #Alle Ergebnisse auslesen -> Liste von Tuples
-    return [row_to_model(row) for row in rows] #Alle Zeilen in ein Model umwandeln -> Dict-Comprehension
+    return [row_to_model(row) for row in rows] #Alle Zeilen in ein Model umwandeln -> List-Comprehension
 
-def create_parameter(parameter: Parameter) -> Parameter | None: #Einen Parameter in die Datenbank einfügen
-    if not parameter: #Parameter Modell ist nicht vorhanden
-        return None
+def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter in die Datenbank einfügen
     query = "INSERT INTO PARAMETER VALUES(:id, :name, :unit, :value)" #Query erstellen
     params = model_to_dict(parameter) #Model Parameter in ein Dict mit mehreren key:value Paaren umwandeln
     try:
@@ -39,39 +37,33 @@ def create_parameter(parameter: Parameter) -> Parameter | None: #Einen Parameter
     connection.commit() #Änderungen speichern
     return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
 
-def update_parameter(name: str, parameter: Parameter) -> Parameter | None: #Einen Parameter in der Datenbank verändern
-    if not (name and parameter): #Name und Parameter Modell ist nicht vorhanden
-        return None
+def update_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Parameter in der Datenbank verändern
     query = "UPDATE PARAMETER SET name=:name, unit=:unit, value=:value WHERE name=:name_original" #Query erstellen
     params = model_to_dict(parameter) #Model Parameter in ein Dict umwandeln
-    params["name_original"] = parameter.name #Original Name in das Dict hinzufügen -> key:value Paar
+    params["name_original"] = name #Original Name in das Dict hinzufügen -> key:value Paar
     cursor.execute(query, params) #Query ausführen
     if cursor.rowcount == 1: #Wenn die Zeile geändert wurde
         connection.commit() #Änderungen speichern
         return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
     else: #Wenn die Zeile nicht geändert wurde
-        raise MissingParameterError(message=f"Parameter with name {parameter.name} not found") #Fehlermeldung -> 404 Not Found
+        raise MissingParameterError(message=f"Parameter with name {name} not found") #Fehlermeldung -> 404 Not Found
 
-def replace_parameter(name: str, parameter: Parameter) -> Parameter | None: #Einen Parameter in der Datenbank ersetzen
-    if not (name and parameter): #Name und Parameter Modell ist nicht vorhanden
-        return None
+def replace_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Parameter in der Datenbank ersetzen
     query = "UPDATE PARAMETER SET name=:name, unit=:unit, value=:value WHERE name=:name_original" #Query erstellen
     params = model_to_dict(parameter) #Model Parameter in ein Dict umwandeln
-    params["name_original"] = parameter.name #Original Name in das Dict hinzufügen -> key:value Paar
+    params["name_original"] = name #Original Name in das Dict hinzufügen -> key:value Paar
     cursor.execute(query, params) #Query ausführen
     if cursor.rowcount == 1: #Wenn die Zeile geändert wurde
         connection.commit() #Änderungen speichern
         return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
     else: #Wenn die Zeile nicht geändert wurde
-        raise MissingParameterError(message=f"Parameter with name {parameter.name} not found") #Fehlermeldung -> 404 Not Found
+        raise MissingParameterError(message=f"Parameter with name {name} not found") #Fehlermeldung -> 404 Not Found
 
-def delete_parameter(name: str) -> bool: #Einen Parameter in der Datenbank löschen
-    if not name: #Name ist nicht vorhanden
-        return False
+def delete_parameter(name: str) -> None: #Einen Parameter in der Datenbank löschen
     query = "DELETE FROM PARAMETER WHERE name=:name" #Query erstellen -> key:value Paar
     params = {"name": name} #Parameter erstellen -> ein key:value Paar
     cursor.execute(query, params) #Query ausführen
     if cursor.rowcount != 1: #Wenn keine Zeile gelöscht wurde
         raise MissingParameterError(message=f"Parameter with name {name} not found") #Fehlermeldung -> 404 Not Found
     connection.commit() #Änderungen speichern
-    return True #True zurückgeben
+    return None #None zurückgeben

@@ -5,7 +5,7 @@ import Data.parameter as data #Datenbank-Layer importieren
 def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben -> Liste von Parametern
     return data.get_parameters() #Funktion-Call aus Data.parameter -> ohne Argument
 
-def get_parameter(name: str) -> Parameter | None: #Einen Parameter zurückgeben -> gemäss dem Namen
+def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gemäss dem Namen
     return data.get_parameter(name) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters
 
 def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
