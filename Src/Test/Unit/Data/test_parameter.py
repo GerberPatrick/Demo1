@@ -46,16 +46,6 @@ def test_get_parameter_missing():
     with pytest.raises(MissingParameterError):
         parameter.get_parameter("Missing")
 
-def test_update_parameter(sample_parameter: Parameter):
-    updated = Parameter(id=1, name="Glucose", unit="mg/dl", value=7.5)
-    resp = parameter.update_parameter(sample_parameter.name, updated)
-    assert resp == updated
-
-def test_update_parameter_missing():
-    sample: Parameter = Parameter(id=2, name="Protein", unit="mg/dl", value=20.0)
-    with pytest.raises(MissingParameterError):
-        parameter.update_parameter(sample.name, sample)
-
 def test_replace_parameter(sample_parameter: Parameter):
     replaced = Parameter(id=1, name="Glucose", unit="mmol/l", value=8.0)
     resp = parameter.replace_parameter(sample_parameter.name, replaced)

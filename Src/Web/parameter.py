@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from Model.parameter import Parameter #Parameter Modell importieren
+from Model.parameter import Parameter, Update, Replace #Parameter Modell importieren
 from Service import parameter as service #Service Layer importieren
 from Error.errors import MissingParameterError, DuplicateParameterError #Fehler Klassen importieren
 
@@ -25,21 +25,23 @@ def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstel
     except DuplicateParameterError as e: #Ausnahme, falls der Parameter bereits in der Datenbank vorhanden ist
         raise HTTPException(status_code=400, detail=e.message) #Fehlermeldung -> 400 Bad Request
 
-@router.patch("") #Path Operation -> PATCH Request
-@router.patch("/") #Path Operation -> PATCH Request
-def update_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Eintrag ändern
+@router.patch("/{name}") #Path Operation -> PATCH Request
+def update_parameter(name: str, parameter: Update) -> Parameter: #Einen Eintrag ändern
     try:
         return service.update_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument
     except MissingParameterError as e: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=e.message) #Fehlermeldung -> 404 Not Found
+    except ValueError as e: #Ausnahme, falls der Parameter nicht geändert werden kann
+        raise HTTPException(status_code=400, detail=str(e)) #Fehlermeldung -> 400 Bad Request
 
-@router.put("") #Path Operation -> PUT Request
-@router.put("/") #Path Operation -> PUT Request
-def replace_parameter(name: str, parameter: Parameter) -> Parameter: #Einen kompletten Parameter ersetzen
+@router.put("/{name}") #Path Operation -> PUT Request
+def replace_parameter(name: str, parameter: Replace) -> Parameter: #Einen kompletten Parameter ersetzen
     try:
         return service.replace_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument
     except MissingParameterError as e: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=e.message) #Fehlermeldung -> 404 Not Found
+    except ValueError as e: #Ausnahme, falls der Parameter nicht ersetzt werden kann
+        raise HTTPException(status_code=400, detail=str(e)) #Fehlermeldung -> 400 Bad Request
 
 @router.delete("/{name}", status_code=204)#Path Operation -> DELETE Request / Status Code 204 -> Parameter gelöscht
 def delete_parameter(name: str) -> None: #Einen Parameter löschen

@@ -9,7 +9,7 @@ def row_to_model(row: tuple) -> Parameter: #Zeile in ein Model umwandeln -> Tupl
     return Parameter(id=id, name=name, unit=unit, value=value) #Model erstellen
 
 def model_to_dict(parameter: Parameter) -> dict: #Model in ein Dict umwandeln
-    return parameter.dict()
+    return parameter.model_dump()
 
 def get_parameter(name: str) -> Parameter: #Einen Parameter aus der Datenbank auslesen -> gemäss dem Namen
     query = "SELECT * FROM PARAMETER WHERE name=:name" #Query erstellen -> key:value Paar
@@ -37,27 +37,19 @@ def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter in die
     connection.commit() #Änderungen speichern
     return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
 
-def update_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Parameter in der Datenbank verändern
-    query = "UPDATE PARAMETER SET name=:name, unit=:unit, value=:value WHERE name=:name_original" #Query erstellen
-    params = model_to_dict(parameter) #Model Parameter in ein Dict umwandeln
-    params["name_original"] = name #Original Name in das Dict hinzufügen -> key:value Paar
-    cursor.execute(query, params) #Query ausführen
-    if cursor.rowcount == 1: #Wenn die Zeile geändert wurde
-        connection.commit() #Änderungen speichern
-        return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
-    else: #Wenn die Zeile nicht geändert wurde
-        raise MissingParameterError(message=f"Parameter with name {name} not found") #Fehlermeldung -> 404 Not Found
-
 def replace_parameter(name: str, parameter: Parameter) -> Parameter: #Einen Parameter in der Datenbank ersetzen
+    get_parameter(name)
     query = "UPDATE PARAMETER SET name=:name, unit=:unit, value=:value WHERE name=:name_original" #Query erstellen
-    params = model_to_dict(parameter) #Model Parameter in ein Dict umwandeln
-    params["name_original"] = name #Original Name in das Dict hinzufügen -> key:value Paar
+    params = \
+    {
+        "name": parameter.name,
+        "unit": parameter.unit,
+        "value": parameter.value,
+        "name_original": name,
+    }
     cursor.execute(query, params) #Query ausführen
-    if cursor.rowcount == 1: #Wenn die Zeile geändert wurde
-        connection.commit() #Änderungen speichern
-        return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
-    else: #Wenn die Zeile nicht geändert wurde
-        raise MissingParameterError(message=f"Parameter with name {name} not found") #Fehlermeldung -> 404 Not Found
+    connection.commit() #Änderungen speichern
+    return get_parameter(parameter.name) #Parameter zurückgeben -> gemäss dem Namen
 
 def delete_parameter(name: str) -> None: #Einen Parameter in der Datenbank löschen
     query = "DELETE FROM PARAMETER WHERE name=:name" #Query erstellen -> key:value Paar

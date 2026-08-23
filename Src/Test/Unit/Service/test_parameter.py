@@ -1,6 +1,6 @@
 import os
 import pytest
-from Model.parameter import Parameter
+from Model.parameter import Parameter, Update, Replace
 
 os.environ["DATABASE_NAME"] = ":memory:"
 from Data import init as db
@@ -39,14 +39,19 @@ def test_get_parameters(sample: Parameter):
     assert len(resp) == 1
 
 def test_update_parameter(sample: Parameter):
-    updated = Parameter(id=1, name="Glucose", unit="mg/dl", value=12.0)
-    resp = code.update_parameter("Glucose", updated)
-    assert resp == updated
+    body = Update(value=12.0)
+    resp = code.update_parameter("Glucose", body)
+    assert resp.value == 12.0
+    assert resp.unit == "mg/dl"
+    assert resp.name == "Glucose"
+    assert resp.id == sample.id
 
 def test_replace_parameter(sample: Parameter):
-    replaced = Parameter(id=1, name="Glucose", unit="mmol/l", value=8.0)
-    resp = code.replace_parameter("Glucose", replaced)
-    assert resp == replaced
+    body = Replace(name="Glucose", unit="mmol/l", value=8.0)
+    resp = code.replace_parameter("Glucose", body)
+    assert resp.unit == "mmol/l"
+    assert resp.value == 8.0
+    assert resp.id == sample.id
 
 def test_delete_parameter():
     resp = code.delete_parameter("Glucose")
