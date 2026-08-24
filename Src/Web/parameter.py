@@ -21,7 +21,7 @@ def get_parameter(name: str) -> Parameter: #Einen Parameter zurÃ¼ckgeben -> gemÃ
 @router.post("/", status_code=201) #Path Operation -> POST Request / Status Code 201 -> Parameter erstellt
 def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
     try:
-        return service.create_parameter(parameter) #Funktion-Call aus Service.parameter -> mit Argument = Parameter-Modell
+        return service.create_parameter(parameter) #Funktion-Call aus Service.parameter -> mit Argument = Create-Modell
     except DuplicateParameterError as error: #Ausnahme, falls der Parameter bereits in der Datenbank vorhanden ist
         raise HTTPException(status_code=400, detail=error.message) #Fehlermeldung -> 400 Bad Request
 

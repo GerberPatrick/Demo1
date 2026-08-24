@@ -9,7 +9,7 @@ def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gem�
     return data.get_parameter(name) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters
 
 def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
-    return data.create_parameter(parameter) #Funktion-Call aus Data.parameter -> mit Argument = Parameter-Modell
+    return data.create_parameter(parameter) #Funktion-Call aus Data.parameter -> mit Argument = Create-Modell
 
 def update_parameter(name: str, new: Update) -> Parameter: #Einen Eintrag ändern
     current = data.get_parameter(name) #Aktueller Parameter
@@ -19,7 +19,7 @@ def update_parameter(name: str, new: Update) -> Parameter: #Einen Eintrag änder
         raise ValueError("Name cannot be changed") #Fehlermeldung
     
     merged = current.model_copy(update=updates) #Aktueller Parameter mit dem neuen Eintrag verbinden
-    return data.replace_parameter(name, merged) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters und Parameter-Modell
+    return data.replace_parameter(name, merged) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters und Replace-Modell
 
 def replace_parameter(name: str, new: Replace) -> Parameter: #Einen kompletten Parameter ersetzen
     if new.name != name: #Kontrolle -> Path-Parameter ist nicht identisch mit dem Body-Parameter
@@ -27,7 +27,7 @@ def replace_parameter(name: str, new: Replace) -> Parameter: #Einen kompletten P
     
     current = data.get_parameter(name) #Aktueller Parameter
     replaced = current.model_copy(update={"name": new.name, "unit": new.unit, "value": new.value}) #Neuer Parameter
-    return data.replace_parameter(name, replaced) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters und Parameter-Modell
+    return data.replace_parameter(name, replaced) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters und Replace-Modell
 
 def delete_parameter(name: str) -> None: #Einen Parameter löschen
     return data.delete_parameter(name) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters
