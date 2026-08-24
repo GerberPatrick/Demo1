@@ -2,12 +2,12 @@ CMD -> HTTPie:
 
 http GET localhost:8000/parameter
 
-http GET localhost:8000/parameter/<Parameter name>
+http GET localhost:8000/parameter/<parameter name>
 
 http POST localhost:8000/parameter name=<string> unit=<string> value:=<float>
 
-http PATCH localhost:8000/parameter/<Parameter name> value:=<float>
+http PATCH localhost:8000/parameter/<parameter name> value:=<float>
 
-http PUT localhost:8000/parameter/<Parameter name> name=<string> unit=<string> value:=<float>
+http PUT localhost:8000/parameter/<parameter name> name=<string> unit=<string> value:=<float>
 
-http DELETE localhost:8000/parameter/<Parameter Name>
+http DELETE localhost:8000/parameter/<parameter Name>
