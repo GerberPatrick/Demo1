@@ -1,6 +1,6 @@
 from Data.init import connection, cursor, IntegrityError #Datenbank-Layer importieren -> zwei Instanzen: connection und cursor
 from Error.errors import MissingParameterError, DuplicateParameterError #Fehler-Layer importieren -> zwei Klassen: MissingParameterError und DuplicateParameterError
-from Model.parameter import Parameter #Model-Layer importieren -> Klasse: Parameter
+from Model.parameter import Parameter, Create #Model-Layer importieren -> Klasse: Parameter und Create
 
 cursor.execute("CREATE TABLE IF NOT EXISTS PARAMETER(id INTEGER PRIMARY KEY, name UNIQUE, unit TEXT, value REAL)") #Tabelle erstellen, falls nicht vorhanden
 
@@ -27,9 +27,9 @@ def get_parameters() -> list[Parameter]: #Alle Parameter aus der Datenbank ausle
     rows = list(cursor.fetchall()) #Alle Ergebnisse auslesen -> Liste von Tuples
     return [row_to_model(row) for row in rows] #Alle Zeilen in ein Model umwandeln -> List-Comprehension
 
-def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter in die Datenbank einfügen
-    query = "INSERT INTO PARAMETER VALUES(:id, :name, :unit, :value)" #Query erstellen
-    params = model_to_dict(parameter) #Model Parameter in ein Dict mit mehreren key:value Paaren umwandeln
+def create_parameter(parameter: Create) -> Parameter: #Einen Parameter in die Datenbank einfügen
+    query = "INSERT INTO PARAMETER (name, unit, value) VALUES (:name, :unit, :value)" #Query erstellen -> id automatisch erstellt
+    params = parameter.model_dump() #Parameter in ein Dict mit mehreren key:value Paaren umwandeln
     try:
         cursor.execute(query, params) #Query ausführen
     except IntegrityError: #Ausnahme, falls der Parameter bereits in der Datenbank vorhanden ist

@@ -1,4 +1,4 @@
-from Model.parameter import Parameter, Replace, Update #Parameter Modell importieren
+from Model.parameter import Parameter, Create, Replace, Update #Modelle importieren
 import Data.parameter as data #Datenbank-Layer importieren
 
 #Middle Layer für die CRUD Operationen -> geben die Funktionen aus dem Data-Layer zurück
@@ -8,7 +8,7 @@ def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben -> Liste v
 def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gemäss dem Namen
     return data.get_parameter(name) #Funktion-Call aus Data.parameter -> mit Argument = Name des Parameters
 
-def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
+def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
     return data.create_parameter(parameter) #Funktion-Call aus Data.parameter -> mit Argument = Parameter-Modell
 
 def update_parameter(name: str, new: Update) -> Parameter: #Einen Eintrag ändern

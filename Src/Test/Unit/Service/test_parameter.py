@@ -1,6 +1,6 @@
 import os
 import pytest
-from Model.parameter import Parameter, Update, Replace
+from Model.parameter import Parameter, Create, Update, Replace
 
 os.environ["DATABASE_NAME"] = ":memory:"
 from Data import init as db
@@ -25,9 +25,13 @@ def isolated_db():
 def sample() -> Parameter:
     return Parameter(id=1, name="Glucose", unit="mg/dl", value=10.0)
 
-def test_create_parameter(sample: Parameter):
-    resp = code.create_parameter(sample)
-    assert resp == sample
+def test_create_parameter():
+    body = Create(name="Glucose", unit="mg/dl", value=10.0)
+    resp = code.create_parameter(body)
+    assert resp.name == "Glucose"
+    assert resp.unit == "mg/dl"
+    assert resp.value == 10.0
+    assert isinstance(resp.id, int)
 
 def test_get_parameter(sample: Parameter):
     resp = code.get_parameter("Glucose")

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from Model.parameter import Parameter, Update, Replace #Parameter Modell importieren
+from Model.parameter import Parameter, Create, Update, Replace #Modelle importieren
 from Service import parameter as service #Service Layer importieren
 from Error.errors import MissingParameterError, DuplicateParameterError #Fehler Klassen importieren
 
@@ -13,13 +13,13 @@ def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
 @router.get("/{name}") #Path Operation -> GET Request
 def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gemäss dem Namen
     try:
-        return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument
+        return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument = Name des Parameters
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
 
 @router.post("", status_code=201) #Path Operation -> POST Request / Status Code 201 -> Parameter erstellt
 @router.post("/", status_code=201) #Path Operation -> POST Request / Status Code 201 -> Parameter erstellt
-def create_parameter(parameter: Parameter) -> Parameter: #Einen Parameter erstellen
+def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
     try:
         return service.create_parameter(parameter) #Funktion-Call aus Service.parameter -> mit Argument = Parameter-Modell
     except DuplicateParameterError as error: #Ausnahme, falls der Parameter bereits in der Datenbank vorhanden ist

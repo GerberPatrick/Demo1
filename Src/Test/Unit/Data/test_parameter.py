@@ -1,6 +1,6 @@
 import os
 import pytest
-from Model.parameter import Parameter
+from Model.parameter import Parameter, Create
 from Error.errors import MissingParameterError, DuplicateParameterError
 
 os.environ["DATABASE_NAME"] = ":memory:" #Datenbank in der Speicher-Datei
@@ -25,13 +25,18 @@ def isolated_db():
 def sample_parameter() -> Parameter:
     return Parameter(id=1, name="Glucose", unit="mg/dl", value=6.0)
 
-def test_create_parameter(sample_parameter: Parameter):
-    resp = parameter.create_parameter(sample_parameter)
-    assert resp == sample_parameter
+def test_create_parameter():
+    body = Create(name="Glucose", unit="mg/dl", value=6.0)
+    resp = parameter.create_parameter(body)
+    assert resp.name == "Glucose"
+    assert resp.unit == "mg/dl"
+    assert resp.value == 6.0
+    assert isinstance(resp.id, int)
 
-def test_create_duplicate_parameter(sample_parameter: Parameter):
+def test_create_duplicate_parameter():
+    body = Create(name="Glucose", unit="mg/dl", value=6.0)
     with pytest.raises(DuplicateParameterError):
-        parameter.create_parameter(sample_parameter)
+        parameter.create_parameter(body)
 
 def test_get_parameter(sample_parameter: Parameter):
     resp = parameter.get_parameter(sample_parameter.name)

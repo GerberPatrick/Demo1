@@ -4,7 +4,7 @@ http GET localhost:8000/parameter
 
 http GET localhost:8000/parameter/<Parameter name>
 
-http POST localhost:8000/parameter id:=<integer> name=<string> unit=<string> value:=<float>
+http POST localhost:8000/parameter name=<string> unit=<string> value:=<float>
 
 http PATCH localhost:8000/parameter/<Parameter name> value:=<float>
 
