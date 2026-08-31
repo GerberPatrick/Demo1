@@ -14,7 +14,7 @@ CREATE_TABLE = \
 )
 
 #Test-Funktionen für die CRUD Operationen -> Data-Layer
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(autouse=True)
 def isolated_db():
     db.init(name=":memory:", reset=True)
     parameter.connection = db.connection
@@ -22,8 +22,8 @@ def isolated_db():
     parameter.cursor.execute(CREATE_TABLE)
 
 @pytest.fixture
-def sample_parameter() -> Parameter:
-    return Parameter(id=1, name="Glucose", unit="mg/dl", value=6.0)
+def glucose() -> Parameter:
+    return parameter.create_parameter(Create(name="Glucose", unit="mg/dl", value=6.0))
 
 def test_create_parameter():
     body = Create(name="Glucose", unit="mg/dl", value=6.0)
@@ -33,38 +33,43 @@ def test_create_parameter():
     assert resp.value == 6.0
     assert isinstance(resp.id, int)
 
-def test_create_duplicate_parameter():
+def test_create_duplicate_parameter(glucose: Parameter):
     body = Create(name="Glucose", unit="mg/dl", value=6.0)
     with pytest.raises(DuplicateParameterError):
         parameter.create_parameter(body)
 
-def test_get_parameter(sample_parameter: Parameter):
-    resp = parameter.get_parameter(sample_parameter.name)
-    assert resp == sample_parameter
+def test_get_parameter(glucose: Parameter):
+    resp = parameter.get_parameter(glucose.name)
+    assert resp == glucose
 
-def test_get_parameters(sample_parameter: Parameter):
+def test_get_parameters(glucose: Parameter):
     resp = parameter.get_parameters()
-    assert sample_parameter in resp
+    assert glucose in resp
     assert len(resp) == 1
+
+def test_get_parameters_empty():
+    assert parameter.get_parameters() == []
 
 def test_get_parameter_missing():
     with pytest.raises(MissingParameterError):
         parameter.get_parameter("Missing")
 
-def test_replace_parameter(sample_parameter: Parameter):
-    replaced = Parameter(id=1, name="Glucose", unit="mmol/l", value=8.0)
-    resp = parameter.replace_parameter(sample_parameter.name, replaced)
+def test_replace_parameter(glucose: Parameter):
+    replaced = Parameter(id=glucose.id, name="Glucose", unit="mmol/l", value=8.0)
+    resp = parameter.replace_parameter(glucose.name, replaced)
     assert resp == replaced
 
-def test_replace_parameter_missing(sample_parameter: Parameter):
-    sample: Parameter = Parameter(id=2, name="Protein", unit="mg/dl", value=20.0)
+def test_replace_parameter_missing():
+    sample = Parameter(id=2, name="Protein", unit="mg/dl", value=20.0)
     with pytest.raises(MissingParameterError):
         parameter.replace_parameter(sample.name, sample)
 
-def test_delete_parameter(sample_parameter: Parameter):
-    resp = parameter.delete_parameter(sample_parameter.name)
+def test_delete_parameter(glucose: Parameter):
+    resp = parameter.delete_parameter(glucose.name)
     assert resp is None
-
-def test_delete_parameter_missing(sample_parameter: Parameter):
     with pytest.raises(MissingParameterError):
-        parameter.delete_parameter(sample_parameter.name)
+        parameter.get_parameter(glucose.name)
+        
+def test_delete_parameter_missing():
+    with pytest.raises(MissingParameterError):
+        parameter.delete_parameter("Missing")

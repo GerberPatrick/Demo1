@@ -8,9 +8,6 @@ def row_to_model(row: tuple) -> Parameter: #Zeile in ein Model umwandeln -> Tupl
     id, name, unit, value = row #Zeile in ein Tuple umwandeln
     return Parameter(id=id, name=name, unit=unit, value=value) #Model erstellen
 
-def model_to_dict(parameter: Parameter) -> dict: #Model in ein Dict umwandeln
-    return parameter.model_dump()
-
 def get_parameter(name: str) -> Parameter: #Einen Parameter aus der Datenbank auslesen -> gemäss dem Namen
     query = "SELECT * FROM PARAMETER WHERE name=:name" #Query erstellen -> key:value Paar
     params = {"name": name} #Parameter erstellen -> ein key:value Paar

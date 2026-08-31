@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from Web import parameter
 
-app = FastAPI() #FastAPI Instanz erstellen
+app = FastAPI(title="REST API for Parameter Management", version="1.0.0") #FastAPI Instanz erstellen
 
 app.include_router(parameter.router) #Router einbinden -> Router sind im Ordner Web definiert
 
