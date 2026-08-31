@@ -10,9 +10,9 @@ def get_parameters() -> list[Parameter]: #Alle Parameter zurückgeben
     return service.get_parameters() #Funktion-Call aus Service.parameter -> ohne Argument
 
 @router.get("/{name}") #Path Operation -> GET Request
-def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben -> gemäss dem Namen
+def get_parameter(name: str) -> Parameter: #Einen Parameter zurückgeben
     try:
-        return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument = Name des Parameters
+        return service.get_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument = string name
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
 
@@ -26,7 +26,7 @@ def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
 @router.patch("/{name}") #Path Operation -> PATCH Request
 def update_parameter(name: str, parameter: Update) -> Parameter: #Einen Eintrag ändern
     try:
-        return service.update_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument = Name des Parameters und Update-Modell
+        return service.update_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument = Update-Modell / string name
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
     except ValueError as error: #Ausnahme, falls der Parameter nicht geändert werden kann
@@ -35,7 +35,7 @@ def update_parameter(name: str, parameter: Update) -> Parameter: #Einen Eintrag 
 @router.put("/{name}") #Path Operation -> PUT Request
 def replace_parameter(name: str, parameter: Replace) -> Parameter: #Einen kompletten Parameter ersetzen
     try:
-        return service.replace_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument = Name des Parameters und Replace-Modell
+        return service.replace_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument = Replace-Modell / string name
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
     except ValueError as error: #Ausnahme, falls der Parameter nicht ersetzt werden kann
@@ -44,6 +44,6 @@ def replace_parameter(name: str, parameter: Replace) -> Parameter: #Einen komple
 @router.delete("/{name}", status_code=204)#Path Operation -> DELETE Request / Status Code 204 -> Parameter gelöscht
 def delete_parameter(name: str) -> None: #Einen Parameter löschen
     try:    
-        return service.delete_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument = Name des Parameters
+        return service.delete_parameter(name) #Funktion-Call aus Service.parameter -> mit Argument = string name
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
