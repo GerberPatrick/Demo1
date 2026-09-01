@@ -1,5 +1,6 @@
 import os
 import pytest
+from pydantic import ValidationError
 from Model.parameter import Parameter, Create, Update, Replace
 from Error.errors import MissingParameterError, DuplicateParameterError
 
@@ -76,9 +77,9 @@ def test_update_parameter_missing():
     with pytest.raises(MissingParameterError):
         code.update_parameter("Missing", Update(value=1.0))
 
-def test_update_parameter_name_change(glucose: Parameter):
-    with pytest.raises(ValueError, match="Name cannot be changed"):
-        code.update_parameter("Glucose", Update(name="Iron"))
+def test_update_rejects_name_field():
+    with pytest.raises(ValidationError):
+        Update(name="Iron")
 
 def test_replace_parameter_missing():
     with pytest.raises(MissingParameterError):

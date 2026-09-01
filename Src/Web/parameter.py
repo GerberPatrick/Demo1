@@ -29,8 +29,6 @@ def update_parameter(name: str, parameter: Update) -> Parameter: #Einen Eintrag 
         return service.update_parameter(name, parameter) #Funktion-Call aus Service.parameter -> mit Argument = Update-Modell / string name
     except MissingParameterError as error: #Ausnahme, falls der Parameter in der Datenbank nicht vorhanden ist
         raise HTTPException(status_code=404, detail=error.message) #Fehlermeldung -> 404 Not Found
-    except ValueError as error: #Ausnahme, falls der Parameter nicht geändert werden kann
-        raise HTTPException(status_code=400, detail=str(error)) #Fehlermeldung -> 400 Bad Request
 
 @router.put("/{name}") #Path Operation -> PUT Request
 def replace_parameter(name: str, parameter: Replace) -> Parameter: #Einen kompletten Parameter ersetzen

@@ -14,10 +14,6 @@ def create_parameter(parameter: Create) -> Parameter: #Einen Parameter erstellen
 def update_parameter(name: str, new: Update) -> Parameter: #Einen Eintrag ändern
     current = data.get_parameter(name) #Aktueller Parameter
     updates = new.model_dump(exclude_unset=True) #Neuer Eintrag -> ohne ungesetzte Felder
-
-    if "name" in updates and updates["name"] != name: #Kontrolle -> keine Name-Änderung
-        raise ValueError("Name cannot be changed") #Fehlermeldung
-    
     merged = current.model_copy(update=updates) #Aktueller Parameter mit dem neuen Eintrag verbinden
     return data.replace_parameter(name, merged) #Funktion-Call aus Data.parameter -> mit Argument = Replace-Modell / string name
 
